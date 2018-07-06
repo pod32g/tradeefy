@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>TradeeFy - Inicio de sesion</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body background="{{ url_for('static', filename='fondo.jpg') }}" style="background-repeat:no-repeat; background-position:center; background-size: cover;">
+	<div class="wrapper margin-top" style="max-width:1400px;">
+        <div class="row-padding">
+            <div class="third">
+            	<p></p>
+            </div>
+            <div class="third card-4 margin-top" style="padding: 15px; background-color: rgba(21,26,31,0.8);">
+            	<center><img src="{{ url_for('static', filename='Logo.png') }}" style="width: 80%;"></center>
+            	<form method="post" action="{{ url_for('login') }}">
+            		<h3 class="text-white" style="font-weight: bold;">Usuario</h3>
+            		<input id="Usuario" type="text" name="username" placeholder="Usuario" value="" required class="text_box">
+            		<h3 class="text-white" style="font-weight: bold;">Contraseña</h3>
+            		<input id="Password" name="password" type="password" placeholder="Contraseña" value="" required class="text_box">
+            		<button class="submit" style="width: 100%">Ingresar</button>
+            	</form>
+            </div>
+        </div>  
+    </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>TradeeFy - App</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        google.charts.setOnLoadCallback(drawBackgroundColor);
+        
+        function drawBackgroundColor() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'X');
+            data.addColumn('number', '{{title}}');
+            data.addColumn('number', 'prediction')
+
+            data.addRows( {{ graph_data|safe }} );
+
+            var options = {
+              hAxis: {
+                title: 'Date'
+              },
+              vAxis: {
+                title: 'Value'
+              },
+              backgroundColor: '#f1f8e9'
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+
+
+
+    </script>
+</head>
+<body class="color-teal">
+    <div class="row-padding" style="background-color: rgba(21,26,31,0.9); max-height: 50px;">
+        <a href="{{url_for('index', company='bitcoin')}}"><img src="{{ url_for('static', filename='bitcoin.png') }}" style="max-height: 45px;"></a>
+        <a href="{{url_for('index', company='ethereum')}}"><img src="{{ url_for('static', filename='ethereum.png') }}" style="max-height: 45px;"></a>
+        <p href="" class="navElement">{{username}} (<a href="{{url_for('logout')}}" class="logout">logout</a>)</p>
+    </div>
+    <div class="wrapper margin-top" style="max-width:1400px;">
+        <div class="row-padding" style="padding: 15px;">
+            <div class="fifth">
+                <center>
+                    <img src="{{ url_for('static', filename='Logo.png') }}" style="max-width: 40%">
+                </center>
+            </div>
+            <div class="threefifth card-4 row-padding" style="background-color: rgba(21,26,31,0.9);">
+                <center><h2 style="font-weight: bold;" class="text-white">{{ title }}</h2></center>
+                <table style="margin-bottom: 10px;">
+                <div class="full card-4 row-padding" style="background-color: rgba(255,253,249,0.8); margin-bottom: 10px;", id=chart_div>
+                    <!--Usa este div para la grafica -->
+                </div>
+                <table style="margin-bottom: 10px;">
+                    {% if not cripto %}
+                        <tr>
+                            <th>Date</th>
+                            <th>Open</th>
+                            <th>Close</th>
+                            <th>Open (Predicted)</th>
+                            <th>Error</th>
+                        </tr>
+
+                        {% set i = 0 %}
+
+                        {% for data in trade_data %}
+                            {% set real = data[1]|float %}
+                            <tr>
+                                {% for x in data %}
+                                    <th>{{ x }}</th>
+                                {% endfor %}
+                                <th>{{predictions[loop.index0]}}</th>
+                                <th>{{ (((predictions[loop.index0]-real)/real)*100) }}%</th>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <th>Date</th>
+                            <th>Price</th>
+                            <th>Price (Predicted)</th>
+                            <th>Error</th>
+                        </tr>
+
+                        {% set i = 0 %}
+
+                        {% for data in trade_data %}
+                            {% set real = data[1]|float %}
+                            <tr>
+                                {% for x in data %}
+                                    <th>{{ x }}</th>
+                                {% endfor %}
+                                <th>{{predictions[loop.index0]}}</th>
+                                <th>{{ (((predictions[loop.index0]-real)/real)*100) }}%</th>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </table>
+                <hr>
+                <center><h2 style="font-weight: bold;" class="text-white">TradeeFy recommends: {{ recomendation }}</h2></center>
+            </div>
+        </div>
+        <div class="row-padding" style="background-color: rgb(21,26,31); margin-top: 10%;">
+            <center>
+                <div class="full">
+                    <h1 class="text-white" style="font-weight: bold;">More companies</h1>
+                </div>
+                <div class="full" style="margin-top: 15px; padding-bottom: 15px;">
+                    <div class="fifth"><a href="{{url_for('index', company='oracle')}}"><img src="{{ url_for('static', filename='Oracle.png') }}" class="logos"></a></div>
+                    <div class="fifth"><a href="{{url_for('index', company='hp')}}"><img src="{{ url_for('static', filename='hp.png') }}" class="logos"></a></div>
+                    <div class="fifth"><a href="{{url_for('index', company='tesla')}}"><img src="{{ url_for('static', filename='TeslaLogo.png') }}" class="logos"></a></div>
+                    <div class="fifth"><a href="{{url_for('index', company='google')}}"><img src="{{ url_for('static', filename='google.png') }}" class="logos"></a></div>
+                    <div class="fifth"><a href="{{url_for('index', company='facebook')}}"><img src="{{ url_for('static', filename='Facebook.png') }}" class="logos"></a></div>
+                </div>
+            </center>
+        </div>
+    </div>
+</body>
+</html>
